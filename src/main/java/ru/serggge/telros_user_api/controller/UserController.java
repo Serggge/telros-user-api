@@ -21,9 +21,8 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ContactDto createNew(@RequestBody UserDto userDto) {
+    public ContactDto register(@RequestBody UserDto userDto) {
       User createdUser = userService.add(userMapper.toUser(userDto));
-      log.info("User created: {}", createdUser);
       return userMapper.toContactDto(createdUser);
     }
 
@@ -31,7 +30,6 @@ public class UserController {
     public ContactDto edit(@RequestBody UserDto userDto,
                            @RequestHeader("X-User-ID") Long userId) {
         User editedUser = userService.update(userMapper.toUser(userDto), userId);
-        log.info("User updated: {}", editedUser);
         return userMapper.toContactDto(editedUser);
     }
 
@@ -42,9 +40,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void erase(@PathVariable("id") Long userId,
-                      @RequestHeader("X-User-ID") Long adminId) {
-        userService.remove(userId, adminId);
+    public void erase(@PathVariable("id") Long idForDelete,
+                      @RequestHeader("X-User-ID") Long userId) {
+        userService.remove(idForDelete, userId);
     }
 
 }

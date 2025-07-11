@@ -11,10 +11,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE u.email like ?1")
     boolean existsByEmail(String email);
 
-    @Query("select count (u) > 0 " +
-            "from User u " +
-            "WHERE u.id = ?1 or ")
-    boolean isAdmin(Long userId, Long adminId);
-
-    User findByEmailLike(String email);
 }

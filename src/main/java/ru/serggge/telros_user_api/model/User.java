@@ -1,8 +1,7 @@
 package ru.serggge.telros_user_api.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -10,6 +9,8 @@ import java.time.LocalDate;
 @Table(name = "users")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -29,5 +30,6 @@ public class User {
     private String phoneNumber;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
-    private Role role;
+    private RoleType role;
+
 }
