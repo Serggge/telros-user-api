@@ -1,15 +1,20 @@
-package ru.serggge.telros_user_api.service;
+package ru.serggge.telros_user_api.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.serggge.telros_user_api.exception.EntityArgumentException;
 import ru.serggge.telros_user_api.exception.SecurityAccessException;
 import ru.serggge.telros_user_api.exception.UserNotFoundException;
-import ru.serggge.telros_user_api.model.Role;
 import ru.serggge.telros_user_api.model.RoleType;
-import ru.serggge.telros_user_api.model.User;
+import ru.serggge.telros_user_api.model.entity.Role;
+import ru.serggge.telros_user_api.model.entity.User;
 import ru.serggge.telros_user_api.repository.UserRepository;
+import ru.serggge.telros_user_api.service.RoleService;
+import ru.serggge.telros_user_api.service.UserService;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,9 +25,10 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
 
     @Override
+    @Transactional
     public User add(User user) {
         checkDuplicateEmail(user);
-        RoleType defaultRole = roleService.getRole(Role.USER);
+        Role defaultRole = roleService.getRole(RoleType.USER);
         user.setRole(defaultRole);
         User createdUser = userRepository.save(user);
         log.info("User created: {}", createdUser);
@@ -45,11 +51,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
     public void remove(Long idForDelete, Long userId) {
         checkOwner(idForDelete, userId);
         User user = get(userId);
         userRepository.deleteById(userId);
         log.info("User deleted: {}", user);
+    }
+
+    @Override
+    public User getByIdEager(Long userId) {
+        return userRepository.findByIdWithFullInfo(userId).orElseThrow(() ->
+                new UserNotFoundException(String.format("User with id: <%d> not found", userId)));
+    }
+
+    @Override
+    public List<User> getAllEager() {
+        return userRepository.findAllWithFullInfo();
     }
 
     private void checkDuplicateEmail(User user) {

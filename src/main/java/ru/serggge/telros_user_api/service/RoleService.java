@@ -1,9 +1,9 @@
 package ru.serggge.telros_user_api.service;
 
-import ru.serggge.telros_user_api.model.Role;
 import ru.serggge.telros_user_api.model.RoleType;
+import ru.serggge.telros_user_api.model.entity.Role;
 
 public interface RoleService {
 
-    RoleType getRole(Role role);
+    Role getRole(RoleType role);
 }

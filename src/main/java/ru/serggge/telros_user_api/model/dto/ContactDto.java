@@ -1,4 +1,4 @@
-package ru.serggge.telros_user_api.model;
+package ru.serggge.telros_user_api.model.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ContactDto {
-    private String name;
+    private String person;
     private String email;
     private String phoneNumber;
 }

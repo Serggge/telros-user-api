@@ -1,8 +1,7 @@
-package ru.serggge.telros_user_api.model;
+package ru.serggge.telros_user_api.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
 
 @Entity
@@ -30,6 +29,9 @@ public class User {
     private String phoneNumber;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
-    private RoleType role;
+    private Role role;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "credential_id")
+    private Credential credential;
 
 }

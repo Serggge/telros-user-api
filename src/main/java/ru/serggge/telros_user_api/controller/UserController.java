@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.serggge.telros_user_api.model.ContactDto;
-import ru.serggge.telros_user_api.model.User;
-import ru.serggge.telros_user_api.model.UserDto;
+import ru.serggge.telros_user_api.model.dto.ContactDto;
+import ru.serggge.telros_user_api.model.entity.User;
+import ru.serggge.telros_user_api.model.dto.UserInfoDto;
 import ru.serggge.telros_user_api.service.UserService;
 import ru.serggge.telros_user_api.util.UserMapper;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -21,15 +23,15 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ContactDto register(@RequestBody UserDto userDto) {
-      User createdUser = userService.add(userMapper.toUser(userDto));
+    public ContactDto register(@RequestBody UserInfoDto userInfoDto) {
+      User createdUser = userService.add(userMapper.toUser(userInfoDto));
       return userMapper.toContactDto(createdUser);
     }
 
     @PatchMapping
-    public ContactDto edit(@RequestBody UserDto userDto,
+    public ContactDto edit(@RequestBody UserInfoDto userInfoDto,
                            @RequestHeader("X-User-ID") Long userId) {
-        User editedUser = userService.update(userMapper.toUser(userDto), userId);
+        User editedUser = userService.update(userMapper.toUser(userInfoDto), userId);
         return userMapper.toContactDto(editedUser);
     }
 
@@ -39,10 +41,15 @@ public class UserController {
         return userMapper.toContactDto(user);
     }
 
+    @GetMapping
+    public List<ContactDto> viewAll() {
+        List<User> allUsers = userService.getAll();
+        return userMapper.toContactDto(allUsers);
+    }
+
     @DeleteMapping("/{id}")
     public void erase(@PathVariable("id") Long idForDelete,
                       @RequestHeader("X-User-ID") Long userId) {
         userService.remove(idForDelete, userId);
     }
-
 }
