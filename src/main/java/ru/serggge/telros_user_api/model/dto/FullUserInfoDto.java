@@ -19,5 +19,5 @@ public class FullUserInfoDto {
     private String email;
     private String phoneNumber;
     private RoleType role;
-    private Credentials credentialDto;
+    private CredentialDto credentials;
 }

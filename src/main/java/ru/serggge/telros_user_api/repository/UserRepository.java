@@ -13,8 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE u.email LIKE :email")
     boolean existsByEmail(String email);
 
-    //Optional<User> findUserByCredential_Login(String login);
-
     @Query("SELECT u " +
             "FROM User u " +
             "JOIN u.credential c " +
@@ -23,13 +21,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u " +
             "FROM User u " +
-            "CROSS JOIN Credential c " +
-            "CROSS JOIN Role r " +
+            "LEFT JOIN u.credential c " +
+            "LEFT JOIN u.role r " +
             "WHERE u.id = :userId")
     Optional<User> findByIdWithFullInfo(Long userId);
 
     @Query("SELECT u " +
-            "FROM User u ")
+            "FROM User u " +
+            "LEFT JOIN u.credential c " +
+            "LEFT JOIN u.role r ")
     List<User> findAllWithFullInfo();
 
 }

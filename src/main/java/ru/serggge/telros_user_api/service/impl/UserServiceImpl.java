@@ -3,6 +3,7 @@ package ru.serggge.telros_user_api.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.serggge.telros_user_api.exception.EntityArgumentException;
 import ru.serggge.telros_user_api.exception.SecurityAccessException;
@@ -36,6 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User update(User user, Long userId) {
         checkUserExistence(userId);
         user.setId(userId);
@@ -45,17 +47,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public User get(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException(String.format("User with id: <%d> not found", userId)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> getAll() {
         return userRepository.findAll();
     }
 
     @Override
+    @Transactional
     public void remove(Long idForDelete, Long userId) {
         checkOwner(idForDelete, userId);
         User user = get(userId);
@@ -64,12 +69,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public User getByIdEager(Long userId) {
         return userRepository.findByIdWithFullInfo(userId).orElseThrow(() ->
                 new UserNotFoundException(String.format("User with id: <%d> not found", userId)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> getAllEager() {
         return userRepository.findAllWithFullInfo();
     }

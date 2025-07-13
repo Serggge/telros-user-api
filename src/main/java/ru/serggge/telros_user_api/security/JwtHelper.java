@@ -3,13 +3,13 @@ package ru.serggge.telros_user_api.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -19,8 +19,8 @@ import java.util.Objects;
 @Slf4j
 public class JwtHelper {
 
-    //@Value("${jwt.token.secret}")
-    private static final String secretPasswd = "secretP@$$w0rD";
+    @Value("${jwt.token.secret}")
+    private String jwtSecret;
 
     public boolean validateToken(String token, UserDetails userDetails) {
         String login = extractLogin(token);
@@ -29,7 +29,7 @@ public class JwtHelper {
         if (Objects.nonNull(login) && Objects.nonNull(password) && Objects.nonNull(expirationDate)) {
             return login.equals(userDetails.getUsername())
                     && password.equals(userDetails.getPassword())
-                    && expirationDate.before(Date.from(Instant.now()));
+                    && Date.from(Instant.now()).before(expirationDate);
         } else {
             return false;
         }
@@ -82,8 +82,7 @@ public class JwtHelper {
     }
 
     private SecretKey getSigningKey() {
-        SecretKey secretKey = Keys.hmacShaKeyFor(secretPasswd.getBytes(StandardCharsets.UTF_8));
-        log.debug("Encoded key: {}", secretKey);
-        return secretKey;
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

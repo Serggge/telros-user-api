@@ -2,11 +2,10 @@ package ru.serggge.telros_user_api.util;
 
 import org.springframework.stereotype.Component;
 import ru.serggge.telros_user_api.model.dto.ContactDto;
-import ru.serggge.telros_user_api.model.dto.Credentials;
+import ru.serggge.telros_user_api.model.dto.CredentialDto;
 import ru.serggge.telros_user_api.model.dto.FullUserInfoDto;
 import ru.serggge.telros_user_api.model.entity.User;
 import ru.serggge.telros_user_api.model.dto.UserInfoDto;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -19,17 +18,11 @@ public class UserMapperImpl implements UserMapper {
                 .append(user.getFirstName())
                 .append(" ")
                 .append(user.getLastName());
-        if (Objects.nonNull(user.getSurname()) && !user.getSurname()
-                                                       .isBlank()) {
-            fullName.append(" ")
-                    .append(user.getSurname());
+        if (Objects.nonNull(user.getSurname()) && !user.getSurname().isBlank()) {
+            fullName.append(" ").append(user.getSurname());
         }
+        return new ContactDto(fullName.toString(), user.getEmail(), user.getPhoneNumber());
 
-        return ContactDto.builder()
-                         .person(fullName.toString())
-                         .email(user.getEmail())
-                         .phoneNumber(user.getPhoneNumber())
-                         .build();
     }
 
     @Override
@@ -53,11 +46,11 @@ public class UserMapperImpl implements UserMapper {
 
     @Override
     public FullUserInfoDto toFullUserInfo(User user) {
-        Credentials credentialDto;
+        CredentialDto credentials;
         if (Objects.nonNull(user.getCredential())) {
-            credentialDto = new Credentials(user.getCredential().getLogin(), user.getCredential().getPassword());
+            credentials = new CredentialDto(user.getCredential().getLogin(), user.getCredential().getPassword());
         } else {
-            credentialDto = new Credentials("not present", "not present");
+            credentials = new CredentialDto("not present", "not present");
         }
         return FullUserInfoDto.builder()
                               .id(user.getId())
@@ -69,7 +62,7 @@ public class UserMapperImpl implements UserMapper {
                               .phoneNumber(user.getPhoneNumber())
                               .role(user.getRole()
                                         .getRoleType())
-                              .credentialDto(credentialDto)
+                              .credentials(credentials)
                               .build();
     }
 

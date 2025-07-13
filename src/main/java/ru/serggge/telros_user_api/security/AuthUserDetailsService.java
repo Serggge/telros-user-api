@@ -17,8 +17,6 @@ public class AuthUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-//        Optional<User> optUser = userRepository.findByLogin(login);
-//        User user = optUser.orElse(new User());
         User user = userRepository.findByLogin(login)
                                             .orElseThrow(() -> new UserNotFoundException("Login not registered: " + login));
         return new ProjectUserDetails(user);

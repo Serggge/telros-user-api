@@ -1,7 +1,6 @@
 package ru.serggge.telros_user_api.service;
 
 import ru.serggge.telros_user_api.model.entity.User;
-
 import java.util.List;
 
 public interface UserService {
