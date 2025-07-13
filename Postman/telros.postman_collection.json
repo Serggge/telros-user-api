@@ -1,0 +1,632 @@
+{
+	"info": {
+		"_postman_id": "c6c08f46-6393-4494-ace7-9cba9805dcfc",
+		"name": "telros",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46721839",
+		"_collection_link": "https://sergey-9889243.postman.co/workspace/Api-testing~61041f32-d10c-4296-be18-1689a120d2c7/collection/46721839-c6c08f46-6393-4494-ace7-9cba9805dcfc?action=share&source=collection_link&creator=46721839"
+	},
+	"item": [
+		{
+			"name": "Create new user with id=2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Has user contact create response\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Test 'person' field\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('person');",
+							"    pm.expect(jsonData.person, '\"person\" must be Ivanov Ivan Ivanovich').to.eql('Ivanov Ivan Ivanovich');",
+							"});",
+							"",
+							"pm.test(\"Test 'email' field\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('email');",
+							"    pm.expect(jsonData.email, '\"email\" must be ivan@mail.ru').to.eql('ivan@mail.ru');",
+							"});",
+							"",
+							"pm.test(\"Test 'phoneNumber' field\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('phoneNumber');",
+							"    pm.expect(jsonData.phoneNumber, '\"phoneNumber\" must be 111-111-111').to.eql('111-111-111');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"lastName\":\"Ivanov\",\n    \"firstName\":\"Ivan\",\n    \"surname\":\"Ivanovich\",\n    \"birthday\":\"2001-01-01\",\n    \"email\":\"ivan@mail.ru\",\n    \"phoneNumber\":\"111-111-111\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by id = 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has user contact response\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Test 'person' field\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('person');",
+							"    pm.expect(jsonData.person, '\"person\" must be Ivanov Ivan Ivanovich').to.eql('Ivanov Ivan Ivanovich');",
+							"});",
+							"",
+							"pm.test(\"Test 'email' field\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('email');",
+							"    pm.expect(jsonData.email, '\"email\" must be ivan@mail.ru').to.eql('ivan@mail.ru');",
+							"});",
+							"",
+							"pm.test(\"Test 'phoneNumber' field\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('phoneNumber');",
+							"    pm.expect(jsonData.phoneNumber, '\"phoneNumber\" must be 111-111-111').to.eql('111-111-111');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All users (must be 2)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has user contact response\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Test list user response\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'person' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0]).to.have.property('person');",
+							"    pm.expect(jsonData[0].person, '\"person\" must be Arisov Efim').to.eql('Arisov Efim');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'email' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0]).to.have.property('email');",
+							"    pm.expect(jsonData[0].email, '\"email\" must be arisov@telros.ru').to.eql('arisov@telros.ru');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'phoneNumber' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0]).to.have.property('phoneNumber');",
+							"    pm.expect(jsonData[0].phoneNumber, '\"phoneNumber\" must be +7(812)603-28-28').to.eql('+7(812)603-28-28');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'person' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[1]).to.have.property('person');",
+							"    pm.expect(jsonData[1].person, '\"person\" must be Ivanov Ivan Ivanovich').to.eql('Ivanov Ivan Ivanovich');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'email' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[1]).to.have.property('email');",
+							"    pm.expect(jsonData[1].email, '\"email\" must be ivan@mail.ru').to.eql('ivan@mail.ru');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'phoneNumber' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[1]).to.have.property('phoneNumber');",
+							"    pm.expect(jsonData[1].phoneNumber, '\"phoneNumber\" must be 111-111-111').to.eql('111-111-111');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"lastName\":\"Ivanov\",\n    \"firstName\":\"Ivan\",\n    \"surname\":\"Ivanovich\",\n    \"birthday\":\"2001-01-01\",\n    \"email\":\"ivan@mail.ru\",\n    \"phoneNumber\":\"111-111-111\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change info Ivanov to Vlasov",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Test 'person' field\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('person');",
+							"    pm.expect(jsonData.person, '\"person\" must be Vlasov Sergey Alexandrovich').to.eql('Vlasov Sergey Alexandrovich');",
+							"});",
+							"",
+							"pm.test(\"Test 'email' field\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('email');",
+							"    pm.expect(jsonData.email, '\"email\" must be serggge_mail@yahoo.com').to.eql('serggge_mail@yahoo.com');",
+							"});",
+							"",
+							"pm.test(\"Test 'phoneNumber' field\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('phoneNumber');",
+							"    pm.expect(jsonData.phoneNumber, '\"phoneNumber\" must be +7(953)178-74-85').to.eql('+7(953)178-74-85');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "X-User-ID",
+						"value": "2",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"lastName\":\"Vlasov\",\n    \"firstName\":\"Sergey\",\n    \"surname\":\"Alexandrovich\",\n    \"birthday\":\"1994-01-14\",\n    \"email\":\"serggge_mail@yahoo.com\",\n    \"phoneNumber\":\"+7(953)178-74-85\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All, second is Vlasov",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has user contact response\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Test list user response\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'person' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0]).to.have.property('person');",
+							"    pm.expect(jsonData[0].person, '\"person\" must be Arisov Efim').to.eql('Arisov Efim');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'email' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0]).to.have.property('email');",
+							"    pm.expect(jsonData[0].email, '\"email\" must be arisov@telros.ru').to.eql('arisov@telros.ru');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'phoneNumber' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0]).to.have.property('phoneNumber');",
+							"    pm.expect(jsonData[0].phoneNumber, '\"phoneNumber\" must be +7(812)603-28-28').to.eql('+7(812)603-28-28');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'person' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[1]).to.have.property('person');",
+							"    pm.expect(jsonData[1].person, '\"person\" must be Vlasov Sergey Alexandrovich').to.eql('Vlasov Sergey Alexandrovich');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'email' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[1]).to.have.property('email');",
+							"    pm.expect(jsonData[1].email, '\"email\" must be serggge_mail@yahoo.com').to.eql('serggge_mail@yahoo.com');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'phoneNumber' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[1]).to.have.property('phoneNumber');",
+							"    pm.expect(jsonData[1].phoneNumber, '\"phoneNumber\" must be +7(953)178-74-85').to.eql('+7(953)178-74-85');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user Vlasov",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-User-ID",
+						"value": "2",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/users/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All aftert delete (must be 1)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has user contact response\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Test list user response\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length, 'List length must be 1').to.eql(1);",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'person' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0]).to.have.property('person');",
+							"    pm.expect(jsonData[0].person, '\"person\" must be Arisov Efim').to.eql('Arisov Efim');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'email' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0]).to.have.property('email');",
+							"    pm.expect(jsonData[0].email, '\"email\" must be arisov@telros.ru').to.eql('arisov@telros.ru');",
+							"});",
+							"",
+							"pm.test(\"Test user[0] 'phoneNumber' field\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0]).to.have.property('phoneNumber');",
+							"    pm.expect(jsonData[0].phoneNumber, '\"phoneNumber\" must be +7(812)603-28-28').to.eql('+7(812)603-28-28');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"lastName\":\"Ivanov\",\n    \"firstName\":\"Ivan\",\n    \"surname\":\"Ivanovich\",\n    \"birthday\":\"2001-01-01\",\n    \"email\":\"ivan@mail.ru\",\n    \"phoneNumber\":\"111-111-111\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fail when email already registered",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Has user contact response\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Test 'message' field\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"    pm.expect(jsonData.message, '\"person\" must be User with email <arisov@telros.ru> already registered').to.eql('User with email <arisov@telros.ru> already registered');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"lastName\":\"Vlasov\",\n    \"firstName\":\"Sergey\",\n    \"surname\":\"Alexandrovich\",\n    \"birthday\":\"1994-01-14\",\n    \"email\":\"arisov@telros.ru\",\n    \"phoneNumber\":\"+7(953)178-74-85\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has user contact response\", function () {",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Test 'message' token\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('token');",
+							"    pm.expect(jsonData.message, '\"person\" must be User with email <arisov@telros.ru> already registered').not.null;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\":\"admin\",\n    \"password\":\"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Not authorized access",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\":\"admin\",\n    \"password\":\"admin\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/user/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

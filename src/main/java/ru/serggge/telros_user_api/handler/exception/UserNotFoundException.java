@@ -1,4 +1,4 @@
-package ru.serggge.telros_user_api.exception;
+package ru.serggge.telros_user_api.handler.exception;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 

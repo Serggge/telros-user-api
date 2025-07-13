@@ -15,9 +15,9 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public ContactDto toContactDto(User user) {
         StringBuilder fullName = new StringBuilder()
-                .append(user.getFirstName())
+                .append(user.getLastName())
                 .append(" ")
-                .append(user.getLastName());
+                .append(user.getFirstName());
         if (Objects.nonNull(user.getSurname()) && !user.getSurname().isBlank()) {
             fullName.append(" ").append(user.getSurname());
         }
@@ -35,12 +35,12 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public User toUser(UserInfoDto userInfoDto) {
         return User.builder()
-                   .lastName(userInfoDto.lastName())
-                   .firstName(userInfoDto.firstName())
-                   .surname(userInfoDto.surname())
-                   .birthday(userInfoDto.birthday())
-                   .email(userInfoDto.email())
-                   .phoneNumber(userInfoDto.phoneNumber())
+                   .lastName(userInfoDto.getLastName())
+                   .firstName(userInfoDto.getFirstName())
+                   .surname(userInfoDto.getSurname())
+                   .birthday(userInfoDto.getBirthday())
+                   .email(userInfoDto.getEmail())
+                   .phoneNumber(userInfoDto.getPhoneNumber())
                    .build();
     }
 

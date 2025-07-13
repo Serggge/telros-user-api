@@ -1,7 +1,7 @@
 package ru.serggge.telros_user_api.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.serggge.telros_user_api.model.dto.ContactDto;
@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -23,13 +22,13 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ContactDto register(@RequestBody UserInfoDto userInfoDto) {
+    public ContactDto register(@RequestBody @Valid UserInfoDto userInfoDto) {
       User createdUser = userService.add(userMapper.toUser(userInfoDto));
       return userMapper.toContactDto(createdUser);
     }
 
     @PatchMapping
-    public ContactDto edit(@RequestBody UserInfoDto userInfoDto,
+    public ContactDto edit(@RequestBody @Valid UserInfoDto userInfoDto,
                            @RequestHeader("X-User-ID") Long userId) {
         User editedUser = userService.update(userMapper.toUser(userInfoDto), userId);
         return userMapper.toContactDto(editedUser);
