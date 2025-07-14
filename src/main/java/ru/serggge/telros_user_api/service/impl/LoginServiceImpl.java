@@ -21,8 +21,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public TokenResponse getToken(TokenRequest tokenRequest) {
-        String login = tokenRequest.login();
-        String password = tokenRequest.password();
+        String login = tokenRequest.getLogin();
+        String password = tokenRequest.getPassword();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         UserDetails userDetails = userDetailsService.loadUserByUsername(login);
         String jwtToken = jwtHelper.createJwtToken(userDetails.getUsername(), userDetails.getPassword());

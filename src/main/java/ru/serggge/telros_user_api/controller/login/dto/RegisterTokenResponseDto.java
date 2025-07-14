@@ -1,4 +1,4 @@
-package ru.serggge.telros_user_api.model.dto;
+package ru.serggge.telros_user_api.controller.login.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenRequest {
-
-    private String login;
-    private String password;
+public class RegisterTokenResponseDto {
+    private String token;
 }

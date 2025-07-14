@@ -34,4 +34,12 @@ public class User {
     @JoinColumn(name = "credential_id")
     private Credential credential;
 
+    public String getFullName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(lastName).append(" ").append(firstName);
+        if (surname != null) {
+            sb.append(" ").append(surname);
+        }
+        return sb.toString();
+    }
 }
