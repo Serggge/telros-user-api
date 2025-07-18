@@ -3,11 +3,12 @@ package ru.serggge.telros_user_api.controller.user;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.serggge.telros_user_api.controller.user.dto.RegisterResponse;
-import ru.serggge.telros_user_api.model.RoleType;
-import ru.serggge.telros_user_api.model.entity.Credential;
-import ru.serggge.telros_user_api.model.entity.Role;
-import ru.serggge.telros_user_api.model.entity.User;
+import ru.serggge.telros_user_api.user.model.UserInfo;
+import ru.serggge.telros_user_api.user.model.RoleType;
+import ru.serggge.telros_user_api.register.entity.Credential;
+import ru.serggge.telros_user_api.user.entity.Role;
+import ru.serggge.telros_user_api.user.entity.User;
+import ru.serggge.telros_user_api.user.util.UserMapper;
 
 import java.time.LocalDate;
 
@@ -43,7 +44,7 @@ class UserMapperTest {
     }
 
     @Test
-    void registerToUser() {
+    void createDtoToUser() {
 
     }
 
@@ -54,9 +55,9 @@ class UserMapperTest {
     @Test
     void toRegisterDto() {
         String fullName = lastName + " " + firstName + " " + surname;
-        RegisterResponse expectedResponse = new RegisterResponse(fullName, email, phoneNumber);
+        UserInfo expectedResponse = new UserInfo(fullName, email, phoneNumber);
 
-        RegisterResponse mappedDto = userMapper.toRegisterDto(user);
+        UserInfo mappedDto = userMapper.toRegisterDto(user);
 
         assertNotNull(mappedDto);
         assertEquals(expectedResponse, mappedDto);

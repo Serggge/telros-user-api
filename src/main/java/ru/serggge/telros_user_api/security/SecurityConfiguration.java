@@ -34,7 +34,7 @@ public class SecurityConfiguration {
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/login", "/users/**")
+                        .requestMatchers("/login", "/register")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
@@ -52,9 +52,8 @@ public class SecurityConfiguration {
         return daoAuthenticationProvider;
     }
 
-
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
+    public AuthenticationManager authenticationManager() throws Exception {
         return new ProviderManager(authenticationProvider());
     }
 

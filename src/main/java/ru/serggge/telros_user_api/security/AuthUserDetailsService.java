@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import ru.serggge.telros_user_api.handler.exception.UserNotFoundException;
-import ru.serggge.telros_user_api.model.entity.User;
-import ru.serggge.telros_user_api.repository.UserRepository;
+import ru.serggge.telros_user_api.user.entity.User;
+import ru.serggge.telros_user_api.user.repository.UserRepository;
 
 @Component
 @RequiredArgsConstructor

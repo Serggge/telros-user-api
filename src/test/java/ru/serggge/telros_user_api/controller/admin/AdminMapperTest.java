@@ -4,12 +4,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.serggge.telros_user_api.controller.admin.dto.ViewAllUserDtoResponse;
-import ru.serggge.telros_user_api.controller.admin.dto.ViewUserDtoResponse;
-import ru.serggge.telros_user_api.model.RoleType;
-import ru.serggge.telros_user_api.model.entity.Credential;
-import ru.serggge.telros_user_api.model.entity.Role;
-import ru.serggge.telros_user_api.model.entity.User;
+import ru.serggge.telros_user_api.admin.util.AdminMapper;
+import ru.serggge.telros_user_api.admin.dto.ViewAllUserDtoResponse;
+import ru.serggge.telros_user_api.admin.dto.ViewUserDtoResponse;
+import ru.serggge.telros_user_api.user.model.RoleType;
+import ru.serggge.telros_user_api.register.entity.Credential;
+import ru.serggge.telros_user_api.user.entity.Role;
+import ru.serggge.telros_user_api.user.entity.User;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,17 +24,7 @@ class AdminMapperTest {
 
     @BeforeEach
     void setUp() {
-        user = User.builder()
-                .id(1L)
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .surname("Ivanovich")
-                .birthday(LocalDate.now())
-                .email("ivan@mail.ru")
-                .phoneNumber("111-111-111")
-                .role(new Role(1L, RoleType.USER))
-                .credential(new Credential(1L, "login", "password"))
-                .build();
+
     }
 
     @AfterEach
