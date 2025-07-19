@@ -6,7 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import ru.serggge.telros_user_api.login.model.JwtToken;
+import ru.serggge.telros_user_api.login.model.AccessToken;
 import ru.serggge.telros_user_api.security.JwtHelper;
 
 @Service
@@ -19,10 +19,10 @@ public class LoginServiceImpl implements LoginService {
 
 
     @Override
-    public JwtToken getToken(String login, String password) {
+    public AccessToken getToken(String login, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         UserDetails userDetails = userDetailsService.loadUserByUsername(login);
         String token = jwtHelper.createJwtToken(userDetails.getUsername());
-        return new JwtToken(token);
+        return new AccessToken(token);
     }
 }

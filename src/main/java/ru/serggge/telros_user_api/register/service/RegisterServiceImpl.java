@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.serggge.telros_user_api.login.model.JwtToken;
+import ru.serggge.telros_user_api.login.model.AccessToken;
 import ru.serggge.telros_user_api.login.service.LoginService;
 import ru.serggge.telros_user_api.register.entity.Credential;
 import ru.serggge.telros_user_api.register.repository.CredentialRepository;
@@ -25,7 +25,7 @@ public class RegisterServiceImpl implements RegisterService {
      */
     @Override
     @Transactional
-    public JwtToken add(Credential credential) {
+    public AccessToken createAccessToken(Credential credential) {
         final String login = credential.getLogin();
         final String password = credential.getPassword();
         Credential encodedCredential = encodeAndSave(credential);

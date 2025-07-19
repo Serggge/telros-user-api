@@ -2,7 +2,8 @@ package ru.serggge.telros_user_api.register.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ru.serggge.telros_user_api.login.model.JwtToken;
+import ru.serggge.telros_user_api.login.model.AccessToken;
+import ru.serggge.telros_user_api.refresh.entity.RefreshToken;
 import ru.serggge.telros_user_api.register.dto.RegisterRequest;
 import ru.serggge.telros_user_api.register.dto.RegisterResponse;
 import ru.serggge.telros_user_api.register.entity.Credential;
@@ -16,7 +17,7 @@ public class RegisterMapper {
         return modelMapper.map(dto, Credential.class);
     }
 
-    public RegisterResponse toRegisterResponse(JwtToken jwtToken) {
-        return new RegisterResponse(jwtToken.token());
+    public RegisterResponse toRegisterResponse(AccessToken accessToken, RefreshToken refreshToken) {
+        return new RegisterResponse(accessToken.token(), refreshToken.getToken());
     }
 }

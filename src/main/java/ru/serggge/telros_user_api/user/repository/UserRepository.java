@@ -32,4 +32,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "LEFT JOIN u.role r ")
     List<User> findAllWithFullInfo();
 
+    Optional<User> findUserByCredentialLogin(String login);
+
 }

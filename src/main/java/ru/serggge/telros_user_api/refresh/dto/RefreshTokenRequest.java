@@ -1,5 +1,6 @@
-package ru.serggge.telros_user_api.register.dto;
+package ru.serggge.telros_user_api.refresh.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterResponse {
+public class RefreshTokenRequest {
 
-    private String accessToken;
+    @NotBlank
     private String refreshToken;
 }

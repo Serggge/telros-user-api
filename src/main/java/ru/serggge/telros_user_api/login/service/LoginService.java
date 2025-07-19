@@ -1,8 +1,8 @@
 package ru.serggge.telros_user_api.login.service;
 
-import ru.serggge.telros_user_api.login.model.JwtToken;
+import ru.serggge.telros_user_api.login.model.AccessToken;
 
 public interface LoginService {
 
-    JwtToken getToken(String login, String password);
+    AccessToken getToken(String login, String password);
 }
