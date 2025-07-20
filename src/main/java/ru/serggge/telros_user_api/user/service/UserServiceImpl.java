@@ -12,7 +12,6 @@ import ru.serggge.telros_user_api.register.entity.Credential;
 import ru.serggge.telros_user_api.user.model.RoleType;
 import ru.serggge.telros_user_api.user.entity.User;
 import ru.serggge.telros_user_api.user.repository.UserRepository;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,7 +37,6 @@ public class UserServiceImpl implements UserService {
     public User add(User user) {
         // проверяем, нет ли уже пользователя с таким же логином
         checkDuplicateEmail(user);
-        // для новых пользователей устанавливаем роль User
         User createdUser = userRepository.save(user);
         log.info("User created: {}", createdUser);
         return createdUser;
@@ -58,14 +56,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public User get(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() ->
+        return userRepository.findUserByIdAndIsActiveTrue(userId).orElseThrow(() ->
                 new UserNotFoundException(String.format("User with id: <%d> not found", userId)));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<User> getAll() {
-        return userRepository.findAll();
+        return userRepository.findAllByIsActiveTrue();
     }
 
     @Override
@@ -119,7 +117,7 @@ public class UserServiceImpl implements UserService {
                    .phoneNumber("NONE")
                    .birthday(LocalDate.now())
                    .role(roleService.getRole(RoleType.USER))
-                   .isActive(false)
+                   .isActive(true)
                    .build();
     }
 }

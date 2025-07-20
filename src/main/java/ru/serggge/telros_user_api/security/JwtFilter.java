@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = matcher.group("token");
             String login = jwtHelper.extractLogin(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(login);
-            boolean isTokenValidated = jwtHelper.validateToken(token, userDetails);
+            boolean isTokenValidated = jwtHelper.validateAccessToken(token, userDetails);
             if (isTokenValidated) {
                 var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

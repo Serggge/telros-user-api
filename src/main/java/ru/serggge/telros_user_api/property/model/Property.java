@@ -1,4 +1,4 @@
-package ru.serggge.telros_user_api.login.dto;
+package ru.serggge.telros_user_api.property.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterResponseDto {
-    private String token;
+public class Property {
+
+    private String key;
+    private Object value;
 }

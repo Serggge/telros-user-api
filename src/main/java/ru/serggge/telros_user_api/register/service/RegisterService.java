@@ -7,4 +7,6 @@ public interface RegisterService {
 
     AccessToken createAccessToken(Credential credential);
 
+    AccessToken generateNew(String login);
+
 }

@@ -9,7 +9,7 @@ import ru.serggge.telros_user_api.refresh.dto.RefreshTokenResponse;
 @RequestMapping("/refresh")
 public interface RefreshOperations {
 
-    @PostMapping
+    @PatchMapping
     @ResponseStatus(HttpStatus.CREATED)
     RefreshTokenResponse refresh(@RequestBody @Valid RefreshTokenRequest request,
                                  @RequestHeader("X-User-Login") String login);

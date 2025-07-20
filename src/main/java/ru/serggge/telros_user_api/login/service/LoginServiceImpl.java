@@ -22,7 +22,7 @@ public class LoginServiceImpl implements LoginService {
     public AccessToken getToken(String login, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         UserDetails userDetails = userDetailsService.loadUserByUsername(login);
-        String token = jwtHelper.createJwtToken(userDetails.getUsername());
+        String token = jwtHelper.createAccessToken(userDetails.getUsername());
         return new AccessToken(token);
     }
 }

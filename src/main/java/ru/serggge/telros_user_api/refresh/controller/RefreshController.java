@@ -2,6 +2,7 @@ package ru.serggge.telros_user_api.refresh.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
+import ru.serggge.telros_user_api.login.model.AccessToken;
 import ru.serggge.telros_user_api.refresh.dto.RefreshTokenRequest;
 import ru.serggge.telros_user_api.refresh.dto.RefreshTokenResponse;
 import ru.serggge.telros_user_api.refresh.entity.RefreshToken;
@@ -17,7 +18,9 @@ public class RefreshController implements RefreshOperations {
 
     @Override
     public RefreshTokenResponse refresh(RefreshTokenRequest request, String login) {
+        // по полученному рефреш токену создаём новый рефреш и аксес токен
         RefreshToken refreshToken = refreshService.get(request.getRefreshToken(), login);
-        return refreshMapper.toTokenResponse(refreshToken);
+        AccessToken accessToken =  refreshService.createAccessToken(login);
+        return refreshMapper.toTokenResponse(accessToken, refreshToken);
     }
 }

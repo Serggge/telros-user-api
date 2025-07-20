@@ -1,13 +1,15 @@
 package ru.serggge.telros_user_api.user.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class UserContactDto implements Personable {
+@Builder
+public class UserContacts {
 
     protected String person;
     protected String email;
