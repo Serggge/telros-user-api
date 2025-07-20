@@ -14,10 +14,11 @@ public interface UserOperations {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    UserInfo create(@RequestBody @Valid CreateRequest dto);
+    UserInfo create(@RequestBody @Valid CreateRequest request,
+                    @RequestHeader("X-User-Login") String login);
 
     @PatchMapping
-    EditResponse edit(@RequestBody @Valid EditRequest dto,
+    EditResponse edit(@RequestBody @Valid EditRequest request,
                              @RequestHeader("X-User-ID") Long userId);
     @GetMapping("/{id}")
     ViewResponse view(@PathVariable("id") Long userId);

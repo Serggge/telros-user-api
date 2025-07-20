@@ -22,15 +22,15 @@ public class UserController implements UserOperations {
     private final UserMapper userMapper;
 
     @Override
-    public UserInfo create(CreateRequest dto) {
+    public UserInfo create(CreateRequest dto, String login) {
         User user = userMapper.createDtoToUser(dto);
-        user = userService.add(user);
+        user = userService.add(user, login);
         return userMapper.toRegisterDto(user);
     }
 
     @Override
-    public EditResponse edit(EditRequest dto, Long userId) {
-        User user = userMapper.editToUser(dto);
+    public EditResponse edit(EditRequest request, Long userId) {
+        User user = userMapper.editToUser(request);
         user = userService.update(user, userId);
         return userMapper.toEditDto(user);
     }

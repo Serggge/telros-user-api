@@ -8,7 +8,7 @@ public interface UserService {
 
     void createGuest(Credential credential);
 
-    User add(User user);
+    User add(User user, String login);
 
     User update(User user, Long userId);
 

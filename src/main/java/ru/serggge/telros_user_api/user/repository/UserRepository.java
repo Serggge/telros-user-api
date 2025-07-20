@@ -2,6 +2,7 @@ package ru.serggge.telros_user_api.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.serggge.telros_user_api.register.repository.UserId;
 import ru.serggge.telros_user_api.user.entity.User;
 import java.util.List;
 import java.util.Optional;
@@ -41,5 +42,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByIsActiveTrue();
 
     Optional<User> findUserByCredentialLoginAndIsActiveTrue(String credentialLogin);
+
+    Optional<UserId> findByCredentialLogin(String login);
 
 }

@@ -9,6 +9,7 @@ import ru.serggge.telros_user_api.handler.exception.EntityArgumentException;
 import ru.serggge.telros_user_api.handler.exception.SecurityAccessException;
 import ru.serggge.telros_user_api.handler.exception.UserNotFoundException;
 import ru.serggge.telros_user_api.register.entity.Credential;
+import ru.serggge.telros_user_api.register.repository.UserId;
 import ru.serggge.telros_user_api.user.model.RoleType;
 import ru.serggge.telros_user_api.user.entity.User;
 import ru.serggge.telros_user_api.user.repository.UserRepository;
@@ -34,12 +35,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User add(User user) {
+    public User add(User user, String login) {
         // проверяем, нет ли уже пользователя с таким же логином
         checkDuplicateEmail(user);
-        User createdUser = userRepository.save(user);
-        log.info("User created: {}", createdUser);
-        return createdUser;
+        // ищем в БД айди пользователя с указанным логином и сохраняем о нём новую информацию
+//        UserId userId = userRepository.findByCredentialLogin(login)
+//                                      .orElseThrow(() -> new RuntimeException("Login not registered: " + login));
+        User savedUser = userRepository.findByLogin(login)
+                                   .orElseThrow(() -> new RuntimeException("Login not registered: " + login));
+        user.setId(savedUser.getId());
+        user.setCredential(savedUser.getCredential());
+        user.setRole(roleService.getRole(RoleType.USER));
+        User newUser = userRepository.save(user);
+        log.info("User created: {}", newUser);
+        return newUser;
     }
 
     @Override
