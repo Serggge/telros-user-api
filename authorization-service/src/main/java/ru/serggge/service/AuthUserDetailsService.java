@@ -19,7 +19,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Credentials credentials = credentialRepository.findByLoginIgnoreCaseAndActiveTrue(login)
+        Credentials credentials = credentialRepository.findByLoginIgnoreCaseAndIsActiveTrue(login)
                                                       .orElseThrow(() ->
                                                               new RuntimeException("Login is not registered"));
         return new AuthUserDetails(credentials);

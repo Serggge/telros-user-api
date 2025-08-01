@@ -16,7 +16,7 @@ public class JwtUtil {
     private final SecretKey secretKey = Jwts.SIG.HS256.key()
                                                       .random(new SecureRandom())
                                                       .build();
-    @Value("${issuer}")
+    @Value("${token.issuer}")
     private String issuer;
     @Value("${token.validity.access}")
     private int tokenValidityPeriod;

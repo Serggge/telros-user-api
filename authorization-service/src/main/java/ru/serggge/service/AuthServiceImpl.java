@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AccessToken register(Credentials credentials) {
-        if (credentialRepository.findByLoginIgnoreCaseAndActiveTrue(credentials.getLogin()).isPresent()) {
+        if (credentialRepository.findByLoginIgnoreCaseAndIsActiveTrue(credentials.getLogin()).isPresent()) {
             throw new RuntimeException("Login already registered");
         }
         String encodedPasswd = passwordEncoder.encode(credentials.getPassword());
