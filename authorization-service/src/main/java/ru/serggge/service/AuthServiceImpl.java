@@ -4,19 +4,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.serggge.entity.Credentials;
-import ru.serggge.entity.RefreshToken;
+import ru.serggge.model.RefreshToken;
 import ru.serggge.model.AccessToken;
 import ru.serggge.repository.CredentialRepository;
-import ru.serggge.repository.RefreshRepository;
 import ru.serggge.util.JwtUtil;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
-import static org.springframework.transaction.annotation.Propagation.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,16 +26,17 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final CredentialRepository credentialRepository;
-    private final RefreshRepository refreshRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final Map<Long, RefreshToken> refreshTokens = new HashMap<>();
     @Value("${token.validity.refresh}")
     private int tokenValidityPeriod;
 
     @Override
     @Transactional
     public AccessToken register(Credentials credentials) {
-        if (credentialRepository.findByLoginIgnoreCaseAndIsActiveTrue(credentials.getLogin()).isPresent()) {
+        if (credentialRepository.findByLoginIgnoreCaseAndIsActiveTrue(credentials.getLogin())
+                                .isPresent()) {
             throw new RuntimeException("Login already registered");
         }
         String encodedPasswd = passwordEncoder.encode(credentials.getPassword());
@@ -46,50 +49,41 @@ public class AuthServiceImpl implements AuthService {
     public AccessToken login(Credentials credentials) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 credentials.getLogin(), credentials.getPassword()));
-        String accessToken = jwtUtil.generateAccessToken(credentials.getLogin());
+        credentials = credentialRepository.findByLoginIgnoreCaseAndIsActiveTrue(credentials.getLogin())
+                                          .orElseThrow(() -> new UsernameNotFoundException("Login not found"));
+        String accessToken = jwtUtil.generateAccessToken(credentials.getId());
         return new AccessToken(accessToken);
     }
 
     @Override
-    @Transactional
-    public RefreshToken createRefreshToken(Credentials credentials) {
-        if (refreshRepository.findByCredentialsLogin(credentials.getLogin()).isEmpty()) {
-            String generatedToken = UUID.randomUUID().toString();
-            RefreshToken refreshToken = RefreshToken.builder()
-                                                    .credentials(credentials)
-                                                    .token(generatedToken)
-                                                    .expiredTime(Instant.now().plus(tokenValidityPeriod, ChronoUnit.DAYS))
-                                                    .isActive(true)
-                                                    .build();
-            return refreshRepository.save(refreshToken);
-        } else {
-            throw new RuntimeException("User already registered");
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public RefreshToken getRefreshToken(Credentials credentials) {
-        RefreshToken refreshToken = refreshRepository.findByCredentialsLogin(credentials.getLogin())
-                                                     .orElseThrow(() -> new RuntimeException("Login unknown"));
-        return refreshToken.getExpiredTime().isAfter(Instant.now())
-                ? refreshToken : updateRefreshToken(refreshToken.getToken());
-    }
-
-    @Override
-    @Transactional(propagation = REQUIRED)
-    public RefreshToken updateRefreshToken(String oldRefreshToken) {
-        RefreshToken refreshToken = refreshRepository.findByToken(oldRefreshToken)
-                                                     .orElseThrow(() -> new RuntimeException("Can't find the token"));
+    public RefreshToken createRefreshToken(Long userId) {
         String generatedToken = UUID.randomUUID().toString();
-        refreshToken.setToken(generatedToken);
-        refreshToken.setExpiredTime(Instant.now().plus(tokenValidityPeriod, ChronoUnit.DAYS));
-        return refreshRepository.save(refreshToken);
+        Date expirationDate = Date.from(Instant.now()
+                                               .plus(tokenValidityPeriod, ChronoUnit.DAYS));
+        RefreshToken refreshToken = new RefreshToken(userId, generatedToken, expirationDate);
+        refreshTokens.put(userId, refreshToken);
+        return refreshToken;
     }
 
     @Override
-    public AccessToken updateAccessToken(Credentials credentials) {
-        String generatedToken = jwtUtil.generateAccessToken(credentials.getLogin());
+    public RefreshToken updateRefreshToken(String oldRefreshToken) {
+        RefreshToken token = refreshTokens.values()
+                                          .stream()
+                                          .filter(refreshToken -> refreshToken.getToken()
+                                                                              .equals(oldRefreshToken))
+                                          .findFirst()
+                                          .orElseThrow(() -> new RuntimeException("Refresh token not found"));
+        return createRefreshToken(token.getUserId());
+    }
+
+    @Override
+    public RefreshToken getRefreshToken(Long userId) {
+        return refreshTokens.get(userId);
+    }
+
+    @Override
+    public AccessToken updateAccessToken(Long userId) {
+        String generatedToken = jwtUtil.generateAccessToken(userId);
         return new AccessToken(generatedToken);
     }
 }

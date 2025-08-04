@@ -28,7 +28,7 @@ public class SecurityConfiguration {
     private final UserDetailsService userDetailsService;
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
@@ -39,19 +39,19 @@ public class SecurityConfiguration {
                                .authenticated())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(STATELESS))
-                .authenticationManager(getManager(getProvider(bCryptEncoder())))
+                .authenticationManager(authenticationManager)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(Customizer.withDefaults())
                 .build();
     }
 
     @Bean
-    public AuthenticationManager getManager(AuthenticationProvider provider) {
+    public AuthenticationManager authManager(AuthenticationProvider provider) {
         return new ProviderManager(provider);
     }
 
     @Bean
-    public AuthenticationProvider getProvider(PasswordEncoder encoder) {
+    public AuthenticationProvider authProvider(PasswordEncoder encoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(encoder);
         return provider;

@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.serggge.dto.*;
 import ru.serggge.entity.Credentials;
-import ru.serggge.entity.RefreshToken;
+import ru.serggge.model.RefreshToken;
 import ru.serggge.model.AccessToken;
 
 @Component

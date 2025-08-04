@@ -1,2 +1,15 @@
 server:
   port: 9090
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    hikari:
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:file:./db/testdb;AUTO_SERVER=TRUE
+      username: sa
+      password: sa
+  cloud:
+    config:
+      enabled: false

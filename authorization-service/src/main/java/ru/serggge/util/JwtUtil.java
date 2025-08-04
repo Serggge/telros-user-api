@@ -1,40 +1,38 @@
 package ru.serggge.util;
 
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import javax.crypto.SecretKey;
-import java.security.SecureRandom;
+import ru.serggge.service.PkiService;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Objects;
 
 @Component
+@RequiredArgsConstructor
 public class JwtUtil {
 
-    private final SecretKey secretKey = Jwts.SIG.HS256.key()
-                                                      .random(new SecureRandom())
-                                                      .build();
-    @Value("${token.issuer}")
-    private String issuer;
-    @Value("${token.validity.access}")
-    private int tokenValidityPeriod;
+    private final PkiService pkiService;
 
-
-    public String generateAccessToken(String login) {
+    public String generateAccessToken(Long userId) {
         return Jwts.builder()
-                   .issuer(issuer)
-                   .subject(login)
+                   .header()
+                   .type("JWT")
+                   .add("alg", pkiService.getKeyAlgorithm())
+                   .add("kid", pkiService.getPublicKeyIdentifier())
+                   .and()
+                   .issuer(pkiService.getIssuer())
+                   .subject(Long.toString(userId))
                    .expiration(Date.from(Instant.now()
-                                                .plus(tokenValidityPeriod, ChronoUnit.MINUTES)))
-                   .signWith(secretKey)
+                                                .plus(pkiService.getTokenValidityPeriod(), ChronoUnit.MINUTES)))
+                   .signWith(pkiService.getPrivateKey())
                    .compact();
     }
 
     public String extractLogin(String token) {
         return Jwts.parser()
-                   .verifyWith(secretKey)
+                   .verifyWith(pkiService.getPublicKey())
                    .build()
                    .parseSignedClaims(token)
                    .getPayload()
@@ -43,11 +41,11 @@ public class JwtUtil {
 
     public Date extractExpirationTime(String token) {
         return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration();
+                   .verifyWith(pkiService.getPublicKey())
+                   .build()
+                   .parseSignedClaims(token)
+                   .getPayload()
+                   .getExpiration();
     }
 
     public boolean validateToken(String token, String login) {

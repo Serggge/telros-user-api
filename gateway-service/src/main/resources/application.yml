@@ -1,2 +1,18 @@
 server:
   port: 8080
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id:
+              uri : http://localhost:8090
+              predicates:
+                - Path=/register
+              filters:
+                - DtoValidation
+                - RewritePath=/register, /auth/register
+  main:
+    web-application-type: reactive

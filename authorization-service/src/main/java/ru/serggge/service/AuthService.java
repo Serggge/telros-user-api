@@ -1,6 +1,6 @@
 package ru.serggge.service;
 
-import ru.serggge.entity.RefreshToken;
+import ru.serggge.model.RefreshToken;
 import ru.serggge.model.AccessToken;
 import ru.serggge.entity.Credentials;
 
@@ -10,11 +10,11 @@ public interface AuthService {
 
     AccessToken login(Credentials credentials);
 
-    RefreshToken createRefreshToken(Credentials credentials);
+    RefreshToken createRefreshToken(Long userId);
 
     RefreshToken updateRefreshToken(String oldToken);
 
-    RefreshToken getRefreshToken(Credentials credentials);
+    RefreshToken getRefreshToken(Long userId);
 
-    AccessToken updateAccessToken(Credentials credentials);
+    AccessToken updateAccessToken(Long userId);
 }

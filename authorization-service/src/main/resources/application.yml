@@ -7,18 +7,25 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     hikari:
-      jdbc-url: jdbc:h2:mem:testdb
+      jdbc-url: jdbc:h2:file:./db/testdb;AUTO_SERVER=TRUE
       username: sa
       password: sa
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
   cloud:
     config:
       enabled: false
+
+  sql:
+    init:
+      mode: always
 
 token:
   validity:
     refresh: 10
     access: 30
-  issuer: Serggge
+  issuer: auth-service
+  secret-key:
+    bit-size: 2048
+    algorithm: RSA
